@@ -1,6 +1,8 @@
 #include <algorithm>
+#include <cassert>
 #include <chrono>
 #include <iostream>
+#include <random>
 #include <stdio.h>
 #include <vector>
 
@@ -10,6 +12,9 @@ duration<double> test1(const int N);
 duration<double> test2(const int N);
 duration<double> test3(const int N);
 duration<double> test4(const int N);
+duration<double> test5(const int N);
+
+std::string rnd_str();
 
 void perform_test(duration<double> (*test_func)(int), const int N,
                   std::string name);
@@ -24,19 +29,24 @@ int main() {
   /* part 2 */
   perform_test(test3, N, "T3 - Vector");
   perform_test(test4, N, "T4 - Vector");
+
+  /* part 3 */
+  perform_test(test5, N, "T5 - Vector");
 }
 
 void perform_test(duration<double> (*test_func)(int), const int N,
                   std::string name) {
   auto total = test_func(N);
 
-  std::cout << name << ": " << total.count() << " seconds\n";
+  std::cout << name << ": " << duration_cast<milliseconds>(total).count()
+            << "ms\n";
 }
 
 duration<double> test1(const int N) {
   std::vector<int> vec(N, 8);
   vec[N / 2] = 7;
 
+  /* high_resolution_clock vs system_clock? */
   auto start = high_resolution_clock::now();
   auto result = std::find(vec.begin(), vec.end(), 7);
   auto end = high_resolution_clock::now();
@@ -72,6 +82,39 @@ duration<double> test4(const int N) {
   auto start = high_resolution_clock::now();
   auto result =
       std::find_if(vec.begin(), vec.end(), [](int i) { return i < 7; });
+  auto end = high_resolution_clock::now();
+
+  return end - start;
+}
+
+const std::string chars =
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+std::default_random_engine re;
+std::uniform_int_distribution<> dist{0, (int)chars.length() - 1};
+
+std::string rnd_str() {
+  std::string rs;
+
+  for (int i = 0; i < 20; i++) {
+    auto rnd_char = chars[dist(re)];
+    rs.push_back(rnd_char);
+  }
+
+  return rs;
+}
+
+duration<double> test5(const int N) {
+  std::vector<std::string> vec(N, rnd_str());
+
+  const std::string target = "XXXXXXXXXXXXXXXXXXXX";
+
+  if (target.length() != 20) {
+    perror("Target string not composed of 20 chars\n");
+    exit(1);
+  }
+
+  auto start = high_resolution_clock::now();
+  auto result = std::find(vec.begin(), vec.end(), target);
   auto end = high_resolution_clock::now();
 
   return end - start;
