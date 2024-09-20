@@ -30,7 +30,7 @@ void perform_test(duration<double> (*test_func)(int), const int N,
                   std::string name);
 
 int main() {
-  const int N = 100'000'000;
+  const int N = 400'000'000;
 
   /* part 1 */
   perform_test(test1, N, "T1 - Vector");
@@ -57,7 +57,10 @@ void perform_test(duration<double> (*test_func)(int), const int N,
   }
 
   std::sort(results.begin(), results.end());
-  auto median = results[TRIES / 2];
+
+  /* get the median index
+   * (3 / 2) == 1*/
+  auto median = results[(TRIES / 2)];
 
   std::cout << name << ": " << duration_cast<milliseconds>(median).count()
             << "ms\n";
