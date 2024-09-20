@@ -2,6 +2,18 @@
 
 Measurements made on `std::find` on `std::vector` for Bjarne Stroustrup's _Design Using C++_ course at Columbia.
 
+## Running
+
+For all optimization flags except `-O0`, my vectors were optimized into nothing.
+Therefore, I decided to use `-O0` in all my tests.
+
+```sh
+make
+
+./measurements
+
+```
+
 ## Description
 
 Let's do some microbenchmarks for simple linear search algorithms.

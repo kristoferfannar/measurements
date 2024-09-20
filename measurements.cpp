@@ -1,3 +1,12 @@
+/*
+ * Author: Kristofer Fannar Bjornsson
+ *         kfb2117
+ *
+ * System: Apple M3 Pro
+ *         arm64
+ *         macOS Sonoma 14.3.1
+ */
+
 #include <algorithm>
 #include <cassert>
 #include <chrono>
@@ -32,8 +41,8 @@ int main() {
   perform_test(test4, N, "T4 - Vector");
 
   /* part 3 */
-  perform_test(test5, N, "T5 - Vector");
-  perform_test(test6, N, "T6 - Vector");
+  // perform_test(test5, N, "T5 - Vector");
+  // perform_test(test6, N, "T6 - Vector");
 }
 
 void perform_test(duration<double> (*test_func)(int), const int N,
@@ -66,8 +75,17 @@ duration<double> test2(const int N) {
   return end - start;
 }
 
+/* Returns integers >= 7 */
+std::default_random_engine int_engine;
+/* random upper bound selected */
+std::uniform_int_distribution<> int_dist{7, 10000};
+
 duration<double> test3(const int N) {
-  std::vector<int> vec(N, 8);
+  std::vector<int> vec(0);
+
+  for (int i = 0; i < N; i++) {
+    vec.push_back(int_dist(int_engine));
+  }
   vec[N / 2] = 2;
 
   auto start = high_resolution_clock::now();
@@ -79,7 +97,11 @@ duration<double> test3(const int N) {
 }
 
 duration<double> test4(const int N) {
-  std::vector<int> vec(N, 8);
+  std::vector<int> vec(0);
+
+  for (int i = 0; i < N; i++) {
+    vec.push_back(int_dist(int_engine));
+  }
 
   auto start = high_resolution_clock::now();
   auto result =
