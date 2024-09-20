@@ -13,6 +13,7 @@ duration<double> test2(const int N);
 duration<double> test3(const int N);
 duration<double> test4(const int N);
 duration<double> test5(const int N);
+duration<double> test6(const int N);
 
 std::string rnd_str();
 
@@ -32,6 +33,7 @@ int main() {
 
   /* part 3 */
   perform_test(test5, N, "T5 - Vector");
+  perform_test(test6, N, "T6 - Vector");
 }
 
 void perform_test(duration<double> (*test_func)(int), const int N,
@@ -112,6 +114,31 @@ duration<double> test5(const int N) {
     perror("Target string not composed of 20 chars\n");
     exit(1);
   }
+
+  auto start = high_resolution_clock::now();
+  auto result = std::find(vec.begin(), vec.end(), target);
+  auto end = high_resolution_clock::now();
+
+  if (result == vec.end()) {
+    std::cout << "nothing found\n";
+  } else {
+    std::cout << "found something\n";
+  }
+
+  return end - start;
+}
+
+duration<double> test6(const int N) {
+  std::vector<std::string> vec(N, rnd_str());
+
+  const std::string target = "XXXXXXXXXXXXXXXXXXXX";
+
+  if (target.length() != 20) {
+    perror("Target string not composed of 20 chars\n");
+    exit(1);
+  }
+
+  vec[N / 2] = target;
 
   auto start = high_resolution_clock::now();
   auto result = std::find(vec.begin(), vec.end(), target);
