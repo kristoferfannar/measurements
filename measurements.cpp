@@ -41,15 +41,25 @@ int main() {
   perform_test(test4, N, "T4 - Vector");
 
   /* part 3 */
-  // perform_test(test5, N, "T5 - Vector");
-  // perform_test(test6, N, "T6 - Vector");
+  perform_test(test5, N, "T5 - Vector");
+  perform_test(test6, N, "T6 - Vector");
 }
 
 void perform_test(duration<double> (*test_func)(int), const int N,
                   std::string name) {
-  auto total = test_func(N);
 
-  std::cout << name << ": " << duration_cast<milliseconds>(total).count()
+  std::vector<duration<double>> results(0);
+
+  const int TRIES = 3;
+  for (int i = 0; i < TRIES; i++) {
+    auto total = test_func(N);
+    results.push_back(total);
+  }
+
+  std::sort(results.begin(), results.end());
+  auto median = results[TRIES / 2];
+
+  std::cout << name << ": " << duration_cast<milliseconds>(median).count()
             << "ms\n";
 }
 
